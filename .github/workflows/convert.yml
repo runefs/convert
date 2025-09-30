@@ -36,8 +36,13 @@ jobs:
           python convert.py "$file" "output/$(basename "$file" .pdf).docx"
         done
 
-    - name: Upload DOCX files
-      uses: actions/upload-artifact@v4
-      with:
-        name: docx-files
-        path: output/
+    - name: Commit and push changes
+      run: |
+        git config --global user.name 'github-actions[bot]'
+        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+        git checkout -b output
+        git add output
+        git commit -m 'Add converted DOCX files'
+        git push origin output --force
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
